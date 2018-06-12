@@ -1,10 +1,21 @@
+"""
+The prime factors of 13195 are 5, 7, 13 and 29.
+
+What is the largest prime factor of the number 600851475143 ?
+
+>>> max(factors(600851475143))
+
+"""
+
 import itertools as it
+from collections import OrderedDict
 import numpy as np
 import pdb
 
 
 # TODO: With large values of n, sieve is pretty inefficient
 # (even with segmentation). Better to just iterate over factors?
+# But also, worth profiling
 
 
 def bool_array(n):
@@ -56,7 +67,39 @@ def segmented_sieve(n, delta=None):
     return primes
 
 
-def factors(n):
-    #return (p for p in range(2, n) if is_prime(p) and n % p == 0)
-    return (p for p in sieve(n) if n % p == 0)
+def multiples(n):
+    """
+    Calculate all factors of a given number
 
+    >>> list(multiples(40))
+    [(2, 3), (5, 1)]
+
+    """
+    assert n > 1
+    factors = OrderedDict()
+    m = 2
+    # Strictly speaking, this iteration is wasteful because we could skip
+    # any multiples of primes. But to do that we need to _know_ which are
+    # prime, which means testing individually or calculating the primes
+    # up to n, which begs the question. In practice, we greedily exclude
+    # composites by factoring out all their corresponding prime multiples
+    # before we increment the loop.
+    while m <= n:
+        while n % m == 0:
+            n = n / m
+            factors[m] = factors.get(m, 0) + 1
+        m += 1
+    return (i for i in factors.items())
+
+
+def factors(n):
+    """
+    Return just the prime factors (without powers) of n
+
+    >>> list(factors(40))
+    [2, 5]
+
+    """
+    # For large n, better to use segmented_sieve, but that's still slow.
+    #return (p for p in sieve(n) if n % p == 0)
+    return (k for k, v in multiples(n))
