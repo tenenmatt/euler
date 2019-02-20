@@ -27,3 +27,45 @@ The product of these numbers is 26 × 63 × 78 × 14 = 1788696.
 What is the greatest product of four adjacent numbers in the same direction (up, down, left, right, or diagonally) in the 20×20 grid?
 
 """
+
+import itertools as it
+
+
+def parse_numstr(val):
+    return int(val)
+
+
+def parse_grid(grid_string):
+    rows = grid_string.strip().split('\n')
+    numerics = [[parse_numstr(i) for i in r.split()]
+                for r in rows]
+    return numerics
+
+
+# Don't want this literal list representation. Rather, let's build
+# sequences of indexes on the grid.
+
+def hor_seq(n, grid):
+    rows, cols = len(grid), len(grid[0])
+    assert n <= cols
+    ind_groups = []
+    for r in range(rows):
+        ind_groups.extend([[(r, i + offset)
+                            for i in range(n)]
+                           for offset in range(cols - n + 1)])
+    return ind_groups
+
+
+def vert_seq(n, grid):
+    rows, cols = len(grid), len(grid[0])
+    assert n <= rows
+    ind_groups = []
+    for c in range(cols):
+        ind_groups.extend([[(i + offset, c)
+                            for offset in range(rows - n + 1)]
+                           for i in range(n)])
+    return ind_groups
+
+
+def diag_seq(grid_string):
+    rows, cols = len(grid), len(grid[0])
