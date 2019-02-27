@@ -62,12 +62,16 @@ def tri_seq():
     return (tri(i) for i in it.count(1))
 
 
+# Just use sympy.ntheory for divisor counts (see comments above)
+divisor_count = nt.divisor_count
+
+
 def least_divisors(seq, m):
     """
     Produce smallest element with _strictly more than_ M divisors
 
     """
-    return next(it.dropwhile(lambda n: nt.divisor_count(n) <= m,
+    return next(it.dropwhile(lambda n: divisor_count(n) <= m,
                              seq))
 
 

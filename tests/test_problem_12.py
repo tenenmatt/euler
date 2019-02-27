@@ -19,7 +19,7 @@ def test_divisor_count():
     assert 6 == divisor_count(28)
 
 
-@pytest.mark.skip("Working out better divisor_count")
+#@pytest.mark.skip("Working out better divisor_count")
 def test_least_divisors():
     # First tri-num with more than 5 divisors is 28
     assert 28 == least_divisors(tri_seq(), 5)
